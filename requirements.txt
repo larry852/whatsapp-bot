@@ -3,4 +3,3 @@ bs4==0.0.1
 python-dateutil==2.6.1
 selenium==3.8.1
 six==1.11.0
-webwhatsapi==1.0.3
