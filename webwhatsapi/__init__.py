@@ -13,6 +13,7 @@ import sys
 import logging
 import pickle
 import tempfile
+from PIL import Image
 
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -64,7 +65,8 @@ class WhatsAPIDriver(object):
         'UnreadChatBanner': '.message-list',
         'ReconnectLink': '.action',
         'WhatsappQrIcon': 'span.icon:nth-child(2)',
-        'QRReloader': '.qr-wrapper-container'
+        'QRReloader': '.qr-wrapper-container',
+        'Notifications': 'span[data-icon=\"alert-notification"]',
     }
 
     _CLASSES = {
@@ -177,17 +179,30 @@ class WhatsAPIDriver(object):
             EC.visibility_of_element_located((By.CSS_SELECTOR, self._SELECTORS['mainPage']))
         )
 
+    def wait_for_connect(self):
+        """Waits for the connect phone"""
+        WebDriverWait(self.driver, 90).until(
+            EC.visibility_of_element_located((By.CSS_SELECTOR, self._SELECTORS['Notifications']))
+        )
+
     def get_qr(self):
         """Get pairing QR code from client"""
         if "Click to reload QR code" in self.driver.page_source:
             self.reload_qr()
         qr = self.driver.find_element_by_css_selector(self._SELECTORS['qrCode'])
+        location = qr.location
+        size = qr.size
         fd, fn_png = tempfile.mkstemp(prefix=self.username, suffix='.png')
         self.logger.debug("QRcode image saved at %s" % fn_png)
-        print(fn_png)
-        self.driver.get_screenshot_as_file(fn_png)
-        # qr.screenshot(fn_png)
+        self.screenshot(fn_png)
         os.close(fd)
+        im = Image.open(fn_png)
+        left = location['x']
+        top = location['y']
+        right = location['x'] + size['width']
+        bottom = location['y'] + size['height']
+        im = im.crop((left, top, right, bottom))  # defines crop points
+        im.save(fn_png)
         return fn_png
 
     def screenshot(self, filename):
@@ -268,10 +283,10 @@ class WhatsAPIDriver(object):
         return Contact(contact, self)
 
     def get_chat_from_id(self, chat_id):
-        chats = filter(
+        chats = list(filter(
             lambda chat: chat["id"] == chat_id,
             self.wapi_functions.getAllChats()
-        )
+        ))
 
         assert len(chats) == 1, "Chat {0} not found".format(chat_id)
 
