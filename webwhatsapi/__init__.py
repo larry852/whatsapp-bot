@@ -14,6 +14,7 @@ import logging
 import pickle
 import tempfile
 from PIL import Image
+import uuid
 
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -192,10 +193,9 @@ class WhatsAPIDriver(object):
         qr = self.driver.find_element_by_css_selector(self._SELECTORS['qrCode'])
         location = qr.location
         size = qr.size
-        fd, fn_png = tempfile.mkstemp(prefix=self.username, suffix='.png')
+        fn_png = "static/qr/QR-" + str(uuid.uuid4()).split('-')[0] + '.png'
         self.logger.debug("QRcode image saved at %s" % fn_png)
         self.screenshot(fn_png)
-        os.close(fd)
         im = Image.open(fn_png)
         left = location['x']
         top = location['y']
@@ -203,7 +203,7 @@ class WhatsAPIDriver(object):
         bottom = location['y'] + size['height']
         im = im.crop((left, top, right, bottom))  # defines crop points
         im.save(fn_png)
-        return fn_png
+        return fn_png.replace('static/', '')
 
     def screenshot(self, filename):
         self.driver.get_screenshot_as_file(filename)

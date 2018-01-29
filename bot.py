@@ -1,12 +1,13 @@
-from PIL import Image
 from webwhatsapi import WhatsAPIDriver
 import utils
 
 driver = None
+contacts = None
 
 
 def init():
     global driver
+    global contacts
     driver = WhatsAPIDriver(client='chrome')
     return driver.get_qr()
 
@@ -23,25 +24,15 @@ def get_contacts():
         return contacts
 
 
-def send_message(contacts):
+def send_message(message):
     for contact in contacts:
         name = contact.get_safe_name()
-        message = "Hola " + name
+        message.format(name)
         try:
             chat = contact.get_chat()
         except Exception:
             chat = None
+        print(name)
         print(message)
         print(chat)
         # chat.send_message(message)
-
-
-if __name__ == "__main__":
-    contacts = None
-    qr = init()
-    viewer = Image.open(qr)
-    viewer.show()
-    if login():
-        while contacts is None:
-            contacts = get_contacts()
-        send_message(contacts)
