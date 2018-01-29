@@ -100,3 +100,5 @@ env_*/
 
 # mypy
 .mypy_cache/
+
+static/qr/*
