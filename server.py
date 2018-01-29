@@ -7,13 +7,13 @@ app = Flask(__name__)
 
 @app.route('/')
 def root():
-    return render_template('index.html')
+    return render_template('index.html', url='#')
 
 
 @app.route('/start')
 def init():
     qr = bot.init()
-    return render_template('index.html', qr=qr)
+    return render_template('index.html', qr=qr, url='#qr')
 
 
 @app.route('/contacs')
