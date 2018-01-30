@@ -23,6 +23,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.common.keys import Keys
 
 
 class WhatsAPIDriverStatus(object):
@@ -311,6 +312,15 @@ class WhatsAPIDriver(object):
 
     def reload_qr(self):
         self.driver.find_element_by_css_selector(self._SELECTORS['qrCode']).click()
+
+    def send_message_by_name_contact(self, name, message):
+        searchBox = self.driver.find_element_by_xpath('//*[@id="side"]/div[2]/div/label/input')
+        searchBox.clear()
+        searchBox.send_keys(name)
+        searchBox.send_keys(Keys.RETURN)
+        messageBox = self.driver.find_element_by_xpath('//*[@id="main"]/footer/div[1]/div[2]/div/div[2]')
+        messageBox.send_keys(message)
+        # messageBox.send_keys(Keys.RETURN)
 
     def get_status(self):
         if self.driver is None:

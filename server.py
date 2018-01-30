@@ -14,8 +14,7 @@ def init():
 @app.route('/contacts')
 def get_contacts():
     if bot.login():
-        while bot.contacts is None:
-            bot.contacts = bot.get_contacts()
+        bot.contacts = bot.get_contacts()
     return render_template('contacts.html', total_contacts=len(bot.contacts))
 
 
