@@ -317,10 +317,15 @@ class WhatsAPIDriver(object):
         searchBox = self.driver.find_element_by_xpath('//*[@id="side"]/div[2]/div/label/input')
         searchBox.clear()
         searchBox.send_keys(name)
-        searchBox.send_keys(Keys.RETURN)
-        messageBox = self.driver.find_element_by_xpath('//*[@id="main"]/footer/div[1]/div[2]/div/div[2]')
-        messageBox.send_keys(message)
-        # messageBox.send_keys(Keys.RETURN)
+        try:
+            resultText = self.driver.find_element_by_xpath('//*[@id="pane-side"]/div/div/div/div[1]/div/div/div/div[2]/div[1]/div/span/span').text
+        except Exception:
+            resultText = ''
+        if resultText == name:
+            searchBox.send_keys(Keys.RETURN)
+            messageBox = self.driver.find_element_by_xpath('//*[@id="main"]/footer/div[1]/div[2]/div/div[2]')
+            messageBox.send_keys(message)
+            # messageBox.send_keys(Keys.RETURN)
 
     def get_status(self):
         if self.driver is None:
