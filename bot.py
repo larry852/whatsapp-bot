@@ -1,5 +1,4 @@
 from webwhatsapi import WhatsAPIDriver
-import utils
 
 driver = None
 contacts = None
@@ -20,19 +19,18 @@ def login():
 def get_contacts():
     driver.wait_for_connect()
     contacts = driver.get_contacts()
-    if utils.query_yes_no('Total contacts: ' + str(len(contacts)) + '. Continue?'):
-        return contacts
+    return contacts
 
 
 def send_message(message):
     for contact in contacts:
         name = contact.get_safe_name()
-        message.format(name)
+        message_user = message.format(name.split(' ')[0]) if name and name[0].isalpha() else message.format('amigo')
         try:
             chat = contact.get_chat()
         except Exception:
             chat = None
-        print(name)
-        print(message)
-        print(chat)
+        print(message_user)
+        # print(name)
+        # print(chat)
         # chat.send_message(message)

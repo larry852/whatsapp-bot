@@ -203,7 +203,7 @@ class WhatsAPIDriver(object):
         bottom = location['y'] + size['height']
         im = im.crop((left, top, right, bottom))  # defines crop points
         im.save(fn_png)
-        return fn_png.replace('static/', '')
+        return fn_png
 
     def screenshot(self, filename):
         self.driver.get_screenshot_as_file(filename)

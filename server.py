@@ -6,32 +6,24 @@ app = Flask(__name__)
 
 
 @app.route('/')
-def root():
-    return render_template('index.html', url='#')
-
-
-@app.route('/start')
 def init():
     qr = bot.init()
-    return render_template('index.html', qr=qr, url='#qr')
+    return render_template('login.html', qr=qr)
 
 
-@app.route('/contacs')
+@app.route('/contacts')
 def get_contacts():
     if bot.login():
-        login = True
         while bot.contacts is None:
             bot.contacts = bot.get_contacts()
-    else:
-        login = False
-    return render_template('index.html', login=login, total_contacts=len(bot.contacts))
+    return render_template('contacts.html', total_contacts=len(bot.contacts))
 
 
-@app.route('/message', methods=['POST'])
+@app.route('/message', methods=['POST', 'GET'])
 def send_message():
-    done = False
     if request.method == 'POST':
         message = request.form.get('message')
         bot.send_message(message)
-        done = True
-    return render_template('index.html', done=done)
+        return render_template('finish.html')
+    else:
+        return render_template('message.html')
