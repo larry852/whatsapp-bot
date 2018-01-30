@@ -59,10 +59,6 @@
 	<div class="col-sm-4">
 		<img class="img-responsive center-block" src="{{qr}}" alt="">
 	</div>
-	<br>
-	<div class="col-sm-4">
-		<button type="button" class="btn btn-default" onclick="window.location.href='contacts';">Next</button>
-	</div>
 	<!-- /.row -->
 </div>
 <!-- /.container -->
@@ -70,6 +66,7 @@
 <!-- Bootstrap core JavaScript -->
 <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
 <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+<script type="text/javascript">window.location.href='contacts';</script>
 
 </body>
 
