@@ -16,3 +16,4 @@ exec gunicorn app:app \
 --timeout $TIMEOUT \
 --user=$USER --group=$GROUP \
 --log-level=debug \
+--bind=0.0.0.0:80
