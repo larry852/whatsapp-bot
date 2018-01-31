@@ -25,11 +25,9 @@ def get_contacts():
 def send_message(message):
     for contact in contacts:
         name = contact.get_safe_name()
-        message_user = message.format(name.split(' ')[0]) if name and name[0].isalpha() else message.format('amigo')
+        message_user = message.format(name.split(' ')[0]) if name and name[0].isalpha() else message.format('amigo/a')
         try:
             chat = contact.get_chat()
-            print(chat)
-            # chat.send_message(message_user)
+            chat.send_message(message_user)
         except Exception:
             driver.send_message_by_name_contact(name, message_user)
-        print(message_user)

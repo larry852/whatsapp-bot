@@ -26,3 +26,7 @@ def send_message():
         return render_template('finish.html')
     else:
         return render_template('message.html')
+
+
+if __name__ == "__main__":
+    app.run()
