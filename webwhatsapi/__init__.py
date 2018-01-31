@@ -159,7 +159,11 @@ class WhatsAPIDriver(object):
                 chrome_options.add_argument('--disable-gpu')
                 chrome_options.add_argument('--no-sandbox')
             # --------- Heroku ---------
-            self.driver = webdriver.Chrome(chrome_options=chrome_options)
+            # self.driver = webdriver.Chrome(chrome_options=chrome_options)
+            self.driver = webdriver.Remote(
+                command_executor='http://127.0.0.1:4444/wd/hub',
+                desired_capabilities={'browserName': 'chrome', 'javascriptEnabled': True}
+            )
 
         elif client == 'remote':
             capabilities = DesiredCapabilities.FIREFOX.copy()
