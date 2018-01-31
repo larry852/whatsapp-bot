@@ -28,6 +28,6 @@ def send_message(message):
         message_user = message.format(name.split(' ')[0]) if name and name[0].isalpha() else message.format('amigo/a')
         try:
             chat = contact.get_chat()
-            chat.send_message(message_user)
+            # chat.send_message(message_user)
         except Exception:
             driver.send_message_by_name_contact(name, message_user)
