@@ -151,18 +151,14 @@ class WhatsAPIDriver(object):
             self.driver = webdriver.Firefox(self._profile)
 
         elif self.client == "chrome":
-            chrome_options = webdriver.ChromeOptions()
-            # --------- Heroku ---------
-            chrome_bin = os.environ.get('GOOGLE_CHROME_BIN', None)
-            if chrome_bin:
-                chrome_options.binary_location = chrome_bin
-                chrome_options.add_argument('--disable-gpu')
-                chrome_options.add_argument('--no-sandbox')
-            # --------- Heroku ---------
-            # self.driver = webdriver.Chrome(chrome_options=chrome_options)
+            self._profile = webdriver.chrome.options.Options()
+            if self._profile_path is not None:
+                self._profile.add_argument("user-data-dir=%s" % self._profile_path)
+            if proxy is not None:
+                profile.add_argument('--proxy-server=%s' % proxy)
             self.driver = webdriver.Remote(
                 command_executor='http://127.0.0.1:4444/wd/hub',
-                desired_capabilities={'browserName': 'chrome', 'javascriptEnabled': True}
+                desired_capabilities={'browserName': 'chrome', 'javascriptEnabled': True, 'chromeOptions': self._profile}
             )
 
         elif client == 'remote':
