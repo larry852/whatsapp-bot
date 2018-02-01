@@ -12,4 +12,6 @@ source bin/activate
 cd $DIR
 pip install -r requirements.txt
 exec gunicorn app:app \
+--timeout $TIMEOUT \
+--user=$USER --group=$GROUP \
 --bind=0.0.0.0:8080
