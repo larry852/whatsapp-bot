@@ -5,6 +5,7 @@ import bot
 app = Flask(__name__)
 
 
+@app.route('/')
 @app.route('/<again>')
 def init(again=None):
     bot.again = True if again else False
@@ -29,7 +30,7 @@ def send_message():
         if last_contact is not None:
             index = bot.contacts.index(last_contact)
             bot.contacts = bot.contacts[index:]
-            return redirect(url_for('login'), again='again')
+            return redirect(url_for('init', again='again'))
         return render_template('finish.html')
     else:
         return render_template('message.html')

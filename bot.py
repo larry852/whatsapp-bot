@@ -9,11 +9,11 @@ def init():
     global driver
     global contacts
     global again
-    if driver:
+    try:
         driver.close()
-        driver = WhatsAPIDriver(client='chrome')
-    else:
-        driver = WhatsAPIDriver(client='chrome')
+    except Exception:
+        pass
+    driver = WhatsAPIDriver(client='chrome')
     return driver.get_qr()
 
 
@@ -35,12 +35,11 @@ def send_message(message):
             message_user = message.format(name.split(' ')[0]) if name and name[0].isalpha() else message.format('amigo/a')
             try:
                 chat = contact.get_chat()
-                print(message_user)
-                # chat.send_message(message_user)
+                chat.send_message(message_user)
             except Exception:
                 driver.send_message_by_name_contact(name, message_user)
-                print(message_user)
         except Exception:
-            print("Erron sending message")
+            print("Error sending message")
+            driver.close()
             return contact
     driver.close()
