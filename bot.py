@@ -31,3 +31,4 @@ def send_message(message):
             # chat.send_message(message_user)
         except Exception:
             driver.send_message_by_name_contact(name, message_user)
+    driver.close()

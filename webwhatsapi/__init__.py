@@ -346,3 +346,6 @@ class WhatsAPIDriver(object):
         except NoSuchElementException:
             pass
         return WhatsAPIDriverStatus.Unknown
+
+    def close(self):
+        self.driver.close()
