@@ -2,11 +2,13 @@ from webwhatsapi import WhatsAPIDriver
 
 driver = None
 contacts = None
+again = None
 
 
 def init():
     global driver
     global contacts
+    global again
     if driver:
         driver.close()
         driver = WhatsAPIDriver(client='chrome')
@@ -28,11 +30,17 @@ def get_contacts():
 
 def send_message(message):
     for contact in contacts:
-        name = contact.get_safe_name()
-        message_user = message.format(name.split(' ')[0]) if name and name[0].isalpha() else message.format('amigo/a')
         try:
-            chat = contact.get_chat()
-            # chat.send_message(message_user)
+            name = contact.get_safe_name()
+            message_user = message.format(name.split(' ')[0]) if name and name[0].isalpha() else message.format('amigo/a')
+            try:
+                chat = contact.get_chat()
+                print(message_user)
+                # chat.send_message(message_user)
+            except Exception:
+                driver.send_message_by_name_contact(name, message_user)
+                print(message_user)
         except Exception:
-            driver.send_message_by_name_contact(name, message_user)
+            print("Erron sending message")
+            return contact
     driver.close()

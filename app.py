@@ -1,20 +1,23 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, url_for, redirect
 import bot
 
 
 app = Flask(__name__)
 
 
-@app.route('/')
-def init():
+@app.route('/<again>')
+def init(again=None):
+    bot.again = True if again else False
     qr = bot.init()
     return render_template('login.html', qr=qr)
 
 
 @app.route('/contacts')
 def get_contacts():
+
     if bot.login():
-        bot.contacts = bot.get_contacts()
+        if not bot.again:
+            bot.contacts = bot.get_contacts()
     return render_template('contacts.html', total_contacts=len(bot.contacts))
 
 
@@ -22,7 +25,11 @@ def get_contacts():
 def send_message():
     if request.method == 'POST':
         message = request.form.get('message')
-        bot.send_message(message)
+        last_contact = bot.send_message(message)
+        if last_contact is not None:
+            index = bot.contacts.index(last_contact)
+            bot.contacts = bot.contacts[index:]
+            return redirect(url_for('login'), again='again')
         return render_template('finish.html')
     else:
         return render_template('message.html')
