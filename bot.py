@@ -7,7 +7,11 @@ contacts = None
 def init():
     global driver
     global contacts
-    driver = WhatsAPIDriver(client='chrome')
+    if driver:
+        driver.close()
+        driver = WhatsAPIDriver(client='chrome')
+    else:
+        driver = WhatsAPIDriver(client='chrome')
     return driver.get_qr()
 
 
