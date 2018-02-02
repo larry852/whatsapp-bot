@@ -6,7 +6,12 @@ app = Flask(__name__)
 
 
 @app.route('/')
-@app.route('/<again>')
+def index():
+    return render_template('index.html')
+
+
+@app.route('/login')
+@app.route('/login/<again>')
 def init(again=None):
     bot.again = True if again else False
     qr = bot.init()
@@ -15,7 +20,6 @@ def init(again=None):
 
 @app.route('/contacts')
 def get_contacts():
-
     if bot.login():
         if not bot.again:
             bot.contacts = bot.get_contacts()
