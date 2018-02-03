@@ -156,11 +156,11 @@ class WhatsAPIDriver(object):
                 self._profile.add_argument("user-data-dir=%s" % self._profile_path)
             if proxy is not None:
                 profile.add_argument('--proxy-server=%s' % proxy)
-            self.driver = webdriver.Chrome(chrome_options=self._profile)
-            # self.driver = webdriver.Remote(
-            #     command_executor='http://127.0.0.1:4444/wd/hub',
-            #     desired_capabilities={'browserName': 'chrome', 'javascriptEnabled': True}
-            # )
+            # self.driver = webdriver.Chrome(chrome_options=self._profile)
+            self.driver = webdriver.Remote(
+                command_executor='http://127.0.0.1:4444/wd/hub',
+                desired_capabilities={'browserName': 'chrome', 'javascriptEnabled': True}
+            )
 
         elif client == 'remote':
             capabilities = DesiredCapabilities.FIREFOX.copy()
