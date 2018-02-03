@@ -331,7 +331,7 @@ class WhatsAPIDriver(object):
                 searchBox.send_keys(Keys.RETURN)
                 messageBox = self.driver.find_element_by_xpath('//*[@id="main"]/footer/div[1]/div[2]/div/div[2]')
                 messageBox.send_keys(message)
-                # messageBox.send_keys(Keys.RETURN)
+                messageBox.send_keys(Keys.RETURN)
             except Exception:
                 return
 
