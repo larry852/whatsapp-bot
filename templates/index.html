@@ -52,16 +52,28 @@
 <div class="container">
 
 	<!-- Portfolio Item Heading -->
-	<h1 class="my-4">Token
+	<h1 class="my-4">Autentication
 	</h1>
 
 	<!-- Portfolio Item Row -->
-	<div class="col-sm-4">
-		<form action="" method="POST">
-			<textarea class="form-control" rows="10" name="message"></textarea>
-			<br>
-			<button type="submit" class="btn btn-default" onclick="window.location.href='message';">Next</button>
-		</form>
+	<div class="col-sm-12">
+			{% if unauthorized %}
+			<div class="alert alert-danger">
+  				<strong>Unauthorized!</strong> Invalid Token.
+			</div>
+			{% endif %}
+			<form method="POST" action="{{ url_for('index') }}"> 
+				<div class="form-group">
+					<label for="token">Token (*)</label>
+					<input type="password" class="form-control" id="token" name="token" aria-describedby="tokenHelp" placeholder="Enter Token" required>
+					<small id="tokenHelp" class="form-text text-muted">Never share your token with anyone else.</small>
+				</div>
+				<div class="form-group">
+					<label for="id_last_contact">ID last contact</label>
+					<input type="text" class="form-control" id="id_last_contact" name="id_last_contact" placeholder="Enter ID">
+				</div>
+				<button type="submit" class="btn btn-primary">Submit</button>
+			</form>
 	</div>
 	<!-- /.row -->
 </div>
@@ -70,7 +82,6 @@
 <!-- Bootstrap core JavaScript -->
 <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
 <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-<script type="text/javascript">window.location.href='contacts';</script>
 
 </body>
 

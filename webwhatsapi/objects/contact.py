@@ -23,9 +23,9 @@ class Contact(WhatsappObject):
         if (isinstance(name, six.string_types)):
             safe_name = safe_str(name)
         else:
-            safe_name = "Unknown"
+            safe_name = None
         return safe_name
 
     def __repr__(self):
         safe_name = self.get_safe_name()
-        return "<Contact {0} ({1})>".format(safe_name, self.id)
+        return "Contact {0} - ID {1}".format(safe_name, self.id)

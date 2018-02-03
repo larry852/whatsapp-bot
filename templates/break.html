@@ -52,12 +52,17 @@
 <div class="container">
 
 	<!-- Portfolio Item Heading -->
-	<h1 class="my-4">Scan QR
+	<h1 class="my-4">
+		<div class="alert alert-warning">
+  			<strong>Break!</strong> Save contact ID
+		</div>
 	</h1>
 
 	<!-- Portfolio Item Row -->
 	<div class="col-sm-12">
-		<img class="img-responsive center-block" src="{{qr}}" alt="">
+		<h2>{{ last_contact }}</h2>
+		<br>
+		<button type="button" class="btn btn-primary" onclick="window.location.href='/';">Start again</button>
 	</div>
 	<!-- /.row -->
 </div>
@@ -66,7 +71,6 @@
 <!-- Bootstrap core JavaScript -->
 <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
 <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-<script type="text/javascript">window.location.href='contacts';</script>
 
 </body>
 
