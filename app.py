@@ -1,8 +1,18 @@
 from flask import Flask, render_template, request, url_for, redirect
+from flask_mail import Mail, Message
 import bot
 
 
 app = Flask(__name__)
+app.config.update(
+    MAIL_SERVER='smtp.gmail.com',
+    MAIL_PORT=465,
+    MAIL_USE_SSL=True,
+    MAIL_USERNAME='larryportocarrero@gmail.com',
+    MAIL_PASSWORD='kgraeoorgsymivug',
+)
+
+mail = Mail(app)
 
 id_last_contact = None
 current_token = None
@@ -67,11 +77,22 @@ def send_message():
         message = request.form.get('message')
         last_contact = bot.send_message(message)
         if last_contact is not None:
+            send_mail(current_token, last_contact)
             current_token = None
             return render_template('break.html', last_contact=last_contact)
         current_token = None
         return render_template('finish.html')
     return render_template('message.html')
+
+
+def send_mail(current_token, last_contact):
+    msg = Message(
+        'WhatsApp Bot',
+        sender='larryportocarrero@gmail.com',
+        recipients=['camilocano146@gmail.com'],
+        body="Token: {}. Last contact: {}".format(current_token, last_contact)
+    )
+    mail.send(msg)
 
 
 if __name__ == "__main__":
