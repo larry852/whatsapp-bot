@@ -156,10 +156,11 @@ class WhatsAPIDriver(object):
                 self._profile.add_argument("user-data-dir=%s" % self._profile_path)
             if proxy is not None:
                 profile.add_argument('--proxy-server=%s' % proxy)
-            self.driver = webdriver.Remote(
-                command_executor='http://127.0.0.1:4444/wd/hub',
-                desired_capabilities={'browserName': 'chrome', 'javascriptEnabled': True}
-            )
+            self.driver = webdriver.Chrome(chrome_options=self._profile)
+            # self.driver = webdriver.Remote(
+            #     command_executor='http://127.0.0.1:4444/wd/hub',
+            #     desired_capabilities={'browserName': 'chrome', 'javascriptEnabled': True}
+            # )
 
         elif client == 'remote':
             capabilities = DesiredCapabilities.FIREFOX.copy()
@@ -316,19 +317,23 @@ class WhatsAPIDriver(object):
     def reload_qr(self):
         self.driver.find_element_by_css_selector(self._SELECTORS['qrCode']).click()
 
-    def send_message_by_name_contact(self, name, message):
+    def send_message_by_id_contact(self, id, message):
         searchBox = self.driver.find_element_by_xpath('//*[@id="side"]/div[2]/div/label/input')
         searchBox.clear()
-        searchBox.send_keys(name)
+        query = id.split('@')[0] if id else ''
+        searchBox.send_keys(query)
         try:
-            resultText = self.driver.find_element_by_xpath('//*[@id="pane-side"]/div/div/div/div[1]/div/div/div/div[2]/div[1]/div/span/span').text
+            self.driver.find_element_by_xpath('//*[@id="pane-side"]/div/div/span')
+            return
         except Exception:
-            resultText = ''
-        if resultText == name:
-            searchBox.send_keys(Keys.RETURN)
-            messageBox = self.driver.find_element_by_xpath('//*[@id="main"]/footer/div[1]/div[2]/div/div[2]')
-            messageBox.send_keys(message)
-            # messageBox.send_keys(Keys.RETURN)
+            try:
+                self.driver.find_element_by_xpath('//*[@id="pane-side"]/div/div/div/div[2]/div')
+                searchBox.send_keys(Keys.RETURN)
+                messageBox = self.driver.find_element_by_xpath('//*[@id="main"]/footer/div[1]/div[2]/div/div[2]')
+                messageBox.send_keys(message)
+                # messageBox.send_keys(Keys.RETURN)
+            except Exception:
+                return
 
     def get_status(self):
         if self.driver is None:

@@ -34,10 +34,8 @@ def send_message(message):
             try:
                 chat = contact.get_chat()
                 # chat.send_message(message_user)
-                print('Message by chat: ' + message_user)
             except Exception:
-                driver.send_message_by_name_contact(name, message_user)
-                print('Message by name: ' + message_user)
+                driver.send_message_by_id_contact(contact.id, message_user)
         except Exception:
             print("Error sending message")
             driver.close()
