@@ -5,13 +5,15 @@ DIR="/home/ubuntu/whatsapp-bot-api/"
 USER=root
 GROUP=sudo
 TIMEOUT=99999
+NUM_WORKERS=3
 echo "Starting $NAME as `whoami`"
 cd $VIRTUALENV
 source bin/activate
 cd $DIR
 pip install -r requirements.txt
 exec gunicorn app:app \
+--workers $NUM_WORKERS \
 --timeout $TIMEOUT \
 --user=$USER --group=$GROUP \
 --log-level=debug \
---bind=0.0.0.0:8080
+--bind=127.0.0.1:8080
