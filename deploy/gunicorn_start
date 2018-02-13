@@ -2,7 +2,7 @@
 NAME="whatsapp-bot-api"
 VIRTUALENV="/home/ubuntu/whatsapp-bot-api/env_whatsapp-bot-api/"
 DIR="/home/ubuntu/whatsapp-bot-api/"
-USER=root
+USER='ubuntu'
 GROUP=sudo
 TIMEOUT=99999
 NUM_WORKERS=3
