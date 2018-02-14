@@ -12,18 +12,23 @@ def init():
     except Exception:
         pass
     driver = WhatsAPIDriver(client='chrome')
+    driver.screenshot('static/status.png')
     return driver.get_qr()
 
 
 def login():
+    driver.screenshot('static/status.png')
     driver.wait_for_login()
+    driver.screenshot('static/status.png')
     return True
 
 
 def get_contacts():
     driver.screenshot('static/status.png')
     driver.wait_for_connect()
+    driver.screenshot('static/status.png')
     contacts = driver.get_contacts()
+    driver.screenshot('static/status.png')
     return contacts
 
 
