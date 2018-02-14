@@ -21,7 +21,7 @@ def login():
 
 
 def get_contacts():
-    # driver.wait_for_connect()
+    driver.wait_for_connect()
     contacts = driver.get_contacts()
     return contacts
 
