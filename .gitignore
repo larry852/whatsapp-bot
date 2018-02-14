@@ -102,3 +102,4 @@ env_*/
 .mypy_cache/
 
 static/qr/*.png
+static/*.png
