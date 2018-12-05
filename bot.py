@@ -1,4 +1,5 @@
 from webwhatsapi import WhatsAPIDriver
+import shutil
 
 driver = None
 contacts = None
@@ -12,16 +13,20 @@ def init():
     except Exception:
         pass
     driver = WhatsAPIDriver(client='chrome')
-    return driver.get_qr()
+    qr_tmp = driver.get_qr()
+    qr = 'static/qr/{}'.format(qr_tmp.split('/')[-1])
+    shutil.move(qr_tmp, qr)
+    print(qr)
+    return qr
 
 
 def login():
-    # driver.wait_for_login()
+    driver.wait_for_login()
     return True
 
 
 def get_contacts():
-    # driver.wait_for_connect()
+    driver.wait_for_connect()
     contacts = driver.get_contacts()
     return contacts
 

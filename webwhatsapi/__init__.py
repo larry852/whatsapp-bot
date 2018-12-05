@@ -26,7 +26,7 @@ from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
-from .objects.chat import Chat, UserChat, factory_chat
+from .objects.chat import UserChat, factory_chat
 from .objects.contact import Contact
 from .objects.message import MessageGroup, factory_message
 from .objects.number_status import NumberStatus
@@ -85,7 +85,8 @@ class WhatsAPIDriver(object):
         'UnreadChatBanner': '.message-list',
         'ReconnectLink': '.action',
         'WhatsappQrIcon': 'span.icon:nth-child(2)',
-        'QRReloader': '._2EZ_m > span > div'
+        'QRReloader': '._2EZ_m > span > div',
+        'Notifications': 'span[data-icon=\"alert-notification"]',
     }
 
     _CLASSES = {
@@ -234,13 +235,13 @@ class WhatsAPIDriver(object):
 
     def connect(self):
         self.driver.get(self._URL)
-        
+
         profilePath = ""
         if self.client == "chrome":
             profilePath = ""
         else:
             profilePath = self._profile.path
-        
+
         local_storage_file = os.path.join(profilePath, self._LOCAL_STORAGE_FILE)
         if os.path.exists(local_storage_file):
             with open(local_storage_file) as f:
@@ -259,6 +260,12 @@ class WhatsAPIDriver(object):
         """Waits for the QR to go away"""
         WebDriverWait(self.driver, timeout).until(
             EC.visibility_of_element_located((By.CSS_SELECTOR, self._SELECTORS['mainPage']))
+        )
+
+    def wait_for_connect(self):
+        """Waits for the connect phone"""
+        WebDriverWait(self.driver, 90).until(
+            EC.visibility_of_element_located((By.CSS_SELECTOR, self._SELECTORS['Notifications']))
         )
 
     def get_qr_plain(self):
@@ -400,7 +407,6 @@ class WhatsAPIDriver(object):
         """
         message_objs = self.wapi_functions.getAllMessagesInChat(chat.id, include_me, include_notifications)
 
-        messages = []
         for message in message_objs:
             yield(factory_message(message, self))
 
@@ -464,7 +470,7 @@ class WhatsAPIDriver(object):
 
         raise ChatNotFoundError("Chat {0} not found".format(chat_id))
 
-    def get_chat_from_phone_number(self, number, createIfNotFound = False):
+    def get_chat_from_phone_number(self, number, createIfNotFound=False):
         """
         Gets chat by phone number
         Number format should be as it appears in Whatsapp ID
@@ -551,7 +557,7 @@ class WhatsAPIDriver(object):
         :type message: str
         """
         return self.wapi_functions.sendMessageToID(recipient, message)
-    
+
     def convert_to_base64(self, path):
         """
         :param path: file path
@@ -565,8 +571,7 @@ class WhatsAPIDriver(object):
             archive = b64encode(image_file.read())
             archive = archive.decode('utf-8')
         return 'data:' + content_type + ';base64,' + archive
-    
-    
+
     def send_media(self, path, chatid, caption):
         """
             converts the file to base64 and sends it using the sendImage function of wapi.js
@@ -578,8 +583,6 @@ class WhatsAPIDriver(object):
         imgBase64 = self.convert_to_base64(path)
         filename = os.path.split(path)[-1]
         return self.wapi_functions.sendImage(imgBase64, chatid, filename, caption)
-    
-    
 
     def chat_send_seen(self, chat_id):
         """
@@ -645,7 +648,7 @@ class WhatsAPIDriver(object):
         :type id: str
         """
         profile_pic_small = self.wapi_functions.getProfilePicSmallFromId(id)
-        if profile_pic:
+        if profile_pic_small:
             return b64decode(profile_pic_small)
         else:
             return False
@@ -746,11 +749,10 @@ class WhatsAPIDriver(object):
         return self.wapi_functions.contactUnblock(id)
 
     def remove_participant_group(self, idGroup, idParticipant):
-        return self.wapi_functions.removeParticipantGroup(idGroup,idParticipant)
+        return self.wapi_functions.removeParticipantGroup(idGroup, idParticipant)
 
     def promove_participant_admin_group(self, idGroup, idParticipant):
-        return self.wapi_functions.promoteParticipantAdminGroup(idGroup,idParticipant)
-
+        return self.wapi_functions.promoteParticipantAdminGroup(idGroup, idParticipant)
 
     def demote_participant_admin_group(self, idGroup, idParticipant):
-        return self.wapi_functions.demoteParticipantAdminGroup(idGroup,idParticipant)
+        return self.wapi_functions.demoteParticipantAdminGroup(idGroup, idParticipant)
