@@ -16,12 +16,12 @@ def init():
 
 
 def login():
-    driver.wait_for_login()
+    # driver.wait_for_login()
     return True
 
 
 def get_contacts():
-    driver.wait_for_connect()
+    # driver.wait_for_connect()
     contacts = driver.get_contacts()
     return contacts
 

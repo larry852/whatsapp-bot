@@ -89,7 +89,7 @@ def send_mail(current_token, last_contact):
     msg = Message(
         'WhatsApp Bot',
         sender='larryportocarrero@gmail.com',
-        recipients=['camilocano146@gmail.com'],
+        recipients=['larryportocarrero@gmail.com'],
         body="Token: {}. Last contact: {}".format(current_token, last_contact)
     )
     mail.send(msg)

@@ -1,10 +1,13 @@
+from weakref import ref
+
+
 def driver_needed(func):
     """
-    Decorator for WhatsappObject methods that need to communicate with the browser
+    Decorator for WhatsappObjectWithId methods that need to communicate with the browser
 
     It ensures that the object receives a driver instance at construction
 
-    :param func: WhatsappObject method
+    :param func: WhatsappObjectWithId method
     :return: Wrapped method
     """
 
@@ -36,20 +39,18 @@ class WhatsappObject(object):
         :param driver: Optional driver instance
         :type driver: WhatsAPIDriver
         """
-        self.id = js_obj["id"]
-        self.name = js_obj["name"]
-
         self._js_obj = js_obj
-        self.driver = driver
+        self._driver = ref(driver)
 
-    def __hash__(self):
-        return hash(self.id)
+    @property
+    def driver(self):
+        return self._driver()
 
-    def __eq__(self, other):
-        return self.id == other.id
+    def get_js_obj(self):
+        return self._js_obj
 
 
-class WhatsappObjectWithoutID(object):
+class WhatsappObjectWithId(WhatsappObject):
     """
     Base class for Whatsapp objects
 
@@ -68,5 +69,17 @@ class WhatsappObjectWithoutID(object):
         :param driver: Optional driver instance
         :type driver: WhatsAPIDriver
         """
-        self._js_obj = js_obj
-        self.driver = driver
+        super(WhatsappObjectWithId, self).__init__(js_obj, driver)
+        if 'id' in js_obj:
+            try:
+                self.id = js_obj["id"]["_serialized"]
+            except:
+                self.id = js_obj["id"]
+        if 'name' in js_obj:
+            self.name = js_obj["name"]
+
+    def __hash__(self):
+        return hash(self.id)
+
+    def __eq__(self, other):
+        return self.id == other.id
