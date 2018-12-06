@@ -58,15 +58,15 @@ def login():
 @app.route('/contacts')
 @require_token
 def get_contacts():
-    # try:
-    if bot.login():
-        bot.contacts = bot.get_contacts()
-        if id_last_contact:
-            index_last_contact = next((index for index, contact in enumerate(bot.contacts) if contact.id == id_last_contact), None)
-            bot.contacts = bot.contacts[index_last_contact:] if index_last_contact else bot.contacts
-    return render_template('contacts.html', total_contacts=len(bot.contacts))
-    # except Exception:
-    #     return redirect(url_for('login'))
+    try:
+        if bot.login():
+            bot.contacts = bot.get_contacts()
+            if id_last_contact:
+                index_last_contact = next((index for index, contact in enumerate(bot.contacts) if contact.id == id_last_contact), None)
+                bot.contacts = bot.contacts[index_last_contact:] if index_last_contact else bot.contacts
+        return render_template('contacts.html', total_contacts=len(bot.contacts))
+    except Exception:
+        return redirect(url_for('login'))
 
 
 @app.route('/message', methods=['POST', 'GET'])
